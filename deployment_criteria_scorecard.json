@@ -1,0 +1,308 @@
+[
+  {
+    "id": "CRIT-ID-01",
+    "pillar": "IDENTITY_ATTESTATION",
+    "name": "Cryptographic Workload Identity & SPIFFE SVID",
+    "frameworkMappings": {
+      "nistAiRmf": "GOVERN 1.1, MAP 1.1",
+      "owaspLlm": "LLM06: Excessive Agency",
+      "iso42001": "A.6.2.2 (AI System Traceability)",
+      "cisaZeroTrust": "Identity Pillar - Level 3 (Automated & Cryptographic)"
+    },
+    "description": "Every autonomous enterprise agent must possess a unique, verifiable SPIFFE ID with X.509 SVID or JWT token, bound to its workload namespace.",
+    "metricType": "BOOLEAN",
+    "targetThreshold": "100% of deployed agents",
+    "currentValue": 100,
+    "passed": true,
+    "criticality": "CRITICAL",
+    "remediationGuide": "Configure SPIRE Workload API sidecar to mint SVIDs dynamically to agent containers."
+  },
+  {
+    "id": "CRIT-ID-02",
+    "pillar": "IDENTITY_ATTESTATION",
+    "name": "Prompt & Model Provenance Integrity Attestation",
+    "frameworkMappings": {
+      "nistAiRmf": "MAP 2.1, MEASURE 2.4",
+      "owaspLlm": "LLM05: Supply Chain Vulnerabilities",
+      "iso42001": "A.8.4 (Supply Chain & AI Models)",
+      "cisaZeroTrust": "Workload Pillar - Attestation"
+    },
+    "description": "Foundation model digest and system prompt manifest must be hashed (SHA-256) and signed at container deployment time to detect tampered instructions.",
+    "metricType": "BOOLEAN",
+    "targetThreshold": "Signed manifest present",
+    "currentValue": 100,
+    "passed": true,
+    "criticality": "HIGH",
+    "remediationGuide": "Enforce CI/CD signature step using Cosign/Sigstore before spinning up agent runtimes."
+  },
+  {
+    "id": "CRIT-ID-03",
+    "pillar": "IDENTITY_ATTESTATION",
+    "name": "Cryptographic Delegation Chain & Intent Ceiling",
+    "frameworkMappings": {
+      "nistAiRmf": "GOVERN 1.2, MANAGE 1.1",
+      "owaspLlm": "LLM06: Excessive Agency",
+      "iso42001": "A.6.1.3 (Roles and Responsibilities)",
+      "cisaZeroTrust": "Identity - Dynamic Trust & Delegation"
+    },
+    "description": "Downstream worker and sub-agents must carry a cryptographically signed delegation chain originating from an authorized human employee or certified orchestrator.",
+    "metricType": "BOOLEAN",
+    "targetThreshold": "Valid signature chain with max risk ceiling",
+    "currentValue": 95,
+    "passed": true,
+    "criticality": "CRITICAL",
+    "remediationGuide": "Mandate parent orchestrator signs task delegation tokens with strict risk ceiling."
+  },
+  {
+    "id": "CRIT-ID-04",
+    "pillar": "IDENTITY_ATTESTATION",
+    "name": "Ephemeral Session Tokens (TTL <= 30 mins)",
+    "frameworkMappings": {
+      "nistAiRmf": "MEASURE 2.1",
+      "owaspLlm": "LLM08: Autonomous Loops & Persistence",
+      "iso42001": "A.9.2 (Access Control)",
+      "cisaZeroTrust": "Identity - Ephemeral Credentials"
+    },
+    "description": "Agents must not hold persistent long-lived API tokens. Session tokens must have strict TTL <= 30 minutes with single-flight nonces.",
+    "metricType": "THRESHOLD",
+    "targetThreshold": "<= 1800 seconds",
+    "currentValue": 1800,
+    "passed": true,
+    "criticality": "HIGH",
+    "remediationGuide": "Configure AegisZero token minter to enforce 1800s maximum lifetime."
+  },
+  {
+    "id": "CRIT-RISK-01",
+    "pillar": "DYNAMIC_RISK",
+    "name": "Multidimensional Real-Time Scoring (6 Dimensions)",
+    "frameworkMappings": {
+      "nistAiRmf": "MEASURE 1.1, MEASURE 2.2",
+      "owaspLlm": "LLM01, LLM02, LLM06",
+      "iso42001": "A.5.2 (AI Risk Assessment)",
+      "cisaZeroTrust": "Continuous Risk Assessment"
+    },
+    "description": "Every proposed tool execution must be evaluated across all 6 risk dimensions (Intent Drift, Tool Criticality, Blast Radius, Context Sensitivity, Trajectory Anomaly, Environment Volatility).",
+    "metricType": "SCORE_0_100",
+    "targetThreshold": "100% tool calls scored pre-execution",
+    "currentValue": 100,
+    "passed": true,
+    "criticality": "CRITICAL",
+    "remediationGuide": "Integrate the AegisZero composite scoring equation inside the PEP interceptor."
+  },
+  {
+    "id": "CRIT-RISK-02",
+    "pillar": "DYNAMIC_RISK",
+    "name": "Semantic Intent Drift Attestation Boundary",
+    "frameworkMappings": {
+      "nistAiRmf": "MANAGE 2.3 (AI Anomaly Detection)",
+      "owaspLlm": "LLM01: Prompt Injection",
+      "iso42001": "A.7.2 (AI Monitoring)",
+      "cisaZeroTrust": "Data Pillar - Content Inspection"
+    },
+    "description": "Mathematical or LLM-based vector cosine distance between the original approved human mission and the tool invocation payload must be computed.",
+    "metricType": "SCORE_0_100",
+    "targetThreshold": "Drift sensitivity >= 85%",
+    "currentValue": 94,
+    "passed": true,
+    "criticality": "CRITICAL",
+    "remediationGuide": "Enable the server-side Gemini Intent Attestation API or local embedding attestation engine."
+  },
+  {
+    "id": "CRIT-RISK-03",
+    "pillar": "DYNAMIC_RISK",
+    "name": "Dynamic Risk Policy Banding (4 Thresholds)",
+    "frameworkMappings": {
+      "nistAiRmf": "MANAGE 1.2, GOVERN 2.1",
+      "owaspLlm": "LLM06: Excessive Agency",
+      "iso42001": "A.6.2 (Governance and Strategy)",
+      "cisaZeroTrust": "Policy Enforcement Banding"
+    },
+    "description": "Policy engine must enforce 4 discrete response tiers: ALLOW (<30), STEP_UP/ATTENUATE (30-59), HITL (60-79), QUARANTINE (>=80).",
+    "metricType": "BOOLEAN",
+    "targetThreshold": "4 bands implemented",
+    "currentValue": 100,
+    "passed": true,
+    "criticality": "HIGH",
+    "remediationGuide": "Verify OPA policy adaptive_authz.rego enforces all 4 action bands."
+  },
+  {
+    "id": "CRIT-PEP-01",
+    "pillar": "PEP_ISOLATION",
+    "name": "Strict Separation: Untrusted Reasoning vs Deterministic PEP",
+    "frameworkMappings": {
+      "nistAiRmf": "GOVERN 1.3, MANAGE 2.2",
+      "owaspLlm": "LLM01: Prompt Injection, LLM02: Insecure Output",
+      "iso42001": "A.8.2 (Data and Model Security)",
+      "cisaZeroTrust": "Zero Ambient Trust / Microsegmentation"
+    },
+    "description": "The agent reasoning loop (LLM) must never have direct network or database access. All actions pass through a deterministic proxy that holds credentials.",
+    "metricType": "BOOLEAN",
+    "targetThreshold": "Zero direct network egress from agent container",
+    "currentValue": 100,
+    "passed": true,
+    "criticality": "CRITICAL",
+    "remediationGuide": "Deploy the AegisZero PEP sidecar and restrict agent pod egress via Kubernetes NetworkPolicy."
+  },
+  {
+    "id": "CRIT-PEP-02",
+    "pillar": "PEP_ISOLATION",
+    "name": "Capability-Based Access Control (Macaroons / C-Tokens)",
+    "frameworkMappings": {
+      "nistAiRmf": "GOVERN 1.2, MANAGE 2.1",
+      "owaspLlm": "LLM06: Excessive Agency",
+      "iso42001": "A.9.1 (Access Control Policy)",
+      "cisaZeroTrust": "Least Privilege Access"
+    },
+    "description": "Tool access must be governed by attenuated cryptographic capability tokens with embedded caveats (resource URI, allowed verbs, max records, max dollar amount).",
+    "metricType": "BOOLEAN",
+    "targetThreshold": "Zero ambient privilege / 100% C-token verified",
+    "currentValue": 100,
+    "passed": true,
+    "criticality": "CRITICAL",
+    "remediationGuide": "Transition from role-based IAM to AegisZero C-Token caveat verification in PEP."
+  },
+  {
+    "id": "CRIT-PEP-03",
+    "pillar": "PEP_ISOLATION",
+    "name": "Strict Schema & Parameter Boundary Validation",
+    "frameworkMappings": {
+      "nistAiRmf": "MEASURE 2.6",
+      "owaspLlm": "LLM02: Insecure Output Handling",
+      "iso42001": "A.8.3 (System Verification)",
+      "cisaZeroTrust": "Workload & Data Validation"
+    },
+    "description": "Every tool argument must be strictly validated against formal JSON Schema specifications before invocation. Unexpected parameters must trigger rejection.",
+    "metricType": "SCORE_0_100",
+    "targetThreshold": "100% schema compliance",
+    "currentValue": 100,
+    "passed": true,
+    "criticality": "HIGH",
+    "remediationGuide": "Implement strict JSON Schema validator in PEP middleware pipeline."
+  },
+  {
+    "id": "CRIT-TRAJ-01",
+    "pillar": "TRAJECTORY_GOVERNANCE",
+    "name": "Cumulative Blast Radius Accumulation Tracking",
+    "frameworkMappings": {
+      "nistAiRmf": "MEASURE 2.5, MANAGE 2.4",
+      "owaspLlm": "LLM08: Excessive Automation / Resource Exhaustion",
+      "iso42001": "A.7.3 (Monitoring and Logging)",
+      "cisaZeroTrust": "Continuous Trajectory Analytics"
+    },
+    "description": "The PEP must track aggregate impact over time (e.g. cumulative financial sum, total customer records read across steps) rather than evaluating steps in isolation.",
+    "metricType": "SCORE_0_100",
+    "targetThreshold": "Cumulative state tracking active",
+    "currentValue": 100,
+    "passed": true,
+    "criticality": "CRITICAL",
+    "remediationGuide": "Ensure Trajectory Monitor state store maintains sliding window session blast radius counters."
+  },
+  {
+    "id": "CRIT-TRAJ-02",
+    "pillar": "TRAJECTORY_GOVERNANCE",
+    "name": "Autonomous Loop & Velocity Spike Detection",
+    "frameworkMappings": {
+      "nistAiRmf": "MANAGE 2.3",
+      "owaspLlm": "LLM08: Infinite Autonomous Loops",
+      "iso42001": "A.7.2 (AI Operations)",
+      "cisaZeroTrust": "Automated Threat Mitigation"
+    },
+    "description": "Detect recursive tool invocation cycles, denial-of-wallet loops, and abnormal step frequencies exceeding velocity thresholds.",
+    "metricType": "BOOLEAN",
+    "targetThreshold": "Max 5 consecutive identical tool cycles allowed",
+    "currentValue": 100,
+    "passed": true,
+    "criticality": "HIGH",
+    "remediationGuide": "Enable cyclic graph detection in TrajectoryEngine."
+  },
+  {
+    "id": "CRIT-TRAJ-03",
+    "pillar": "TRAJECTORY_GOVERNANCE",
+    "name": "Forbidden Tool Transition Constraints",
+    "frameworkMappings": {
+      "nistAiRmf": "GOVERN 1.3, MAP 2.3",
+      "owaspLlm": "LLM01: Prompt Injection, LLM06: Excessive Agency",
+      "iso42001": "A.8.3 (Control of AI Changes)",
+      "cisaZeroTrust": "Micro-segmentation Transitions"
+    },
+    "description": "Enforce state machine transition graph rules (e.g., Reading unverified external internet content CANNOT be immediately followed by internal credential or financial transfer APIs).",
+    "metricType": "BOOLEAN",
+    "targetThreshold": "Transition graph enforced",
+    "currentValue": 100,
+    "passed": true,
+    "criticality": "HIGH",
+    "remediationGuide": "Define forbidden tool transition matrix in AegisZero policy rules."
+  },
+  {
+    "id": "CRIT-HITL-01",
+    "pillar": "HITL_RESILIENCE",
+    "name": "Dual-Custody Human Approval for High-Impact Mutations",
+    "frameworkMappings": {
+      "nistAiRmf": "GOVERN 1.2, MANAGE 1.3",
+      "owaspLlm": "LLM06: Excessive Agency",
+      "iso42001": "A.6.1.4 (Human Oversight)",
+      "cisaZeroTrust": "Step-Up Verification"
+    },
+    "description": "Actions exceeding enterprise thresholds (financial mutations > $50k, table drop, bulk PII export > 500 records) must block and require dual human signatures.",
+    "metricType": "BOOLEAN",
+    "targetThreshold": "Dual-custody gate active for critical operations",
+    "currentValue": 100,
+    "passed": true,
+    "criticality": "CRITICAL",
+    "remediationGuide": "Configure HITL approval service with multi-approver role requirements."
+  },
+  {
+    "id": "CRIT-HITL-02",
+    "pillar": "HITL_RESILIENCE",
+    "name": "Dynamic Parameter Attenuation for Borderline Actions",
+    "frameworkMappings": {
+      "nistAiRmf": "MANAGE 2.1",
+      "owaspLlm": "LLM06: Excessive Agency",
+      "iso42001": "A.8.2 (Security Architecture)",
+      "cisaZeroTrust": "Dynamic Policy Attenuation"
+    },
+    "description": "Rather than simple binary rejection, the system must support dynamic capability attenuation (e.g., automatically clamping record limits, stripping PII flags, converting writes to dry-runs).",
+    "metricType": "BOOLEAN",
+    "targetThreshold": "Attenuation rewrite rules supported",
+    "currentValue": 100,
+    "passed": true,
+    "criticality": "MEDIUM",
+    "remediationGuide": "Implement Rego-based parameter mutation in PEP response handler."
+  },
+  {
+    "id": "CRIT-HITL-03",
+    "pillar": "HITL_RESILIENCE",
+    "name": "Instant Agent Quarantine Kill-Switch (MTTR < 100ms)",
+    "frameworkMappings": {
+      "nistAiRmf": "MANAGE 2.4 (Incident Response)",
+      "owaspLlm": "LLM08: Rogue Agent Containment",
+      "iso42001": "A.10.1 (Incident Management)",
+      "cisaZeroTrust": "Automated Threat Containment"
+    },
+    "description": "A single API call or policy violation at risk level CRITICAL must immediately revoke all ephemeral tokens and terminate the agent session across the fleet.",
+    "metricType": "THRESHOLD",
+    "targetThreshold": "Containment latency < 100ms",
+    "currentValue": 35,
+    "passed": true,
+    "criticality": "CRITICAL",
+    "remediationGuide": "Connect PEP to Redis/In-Memory token revocation cache with sub-millisecond propagation."
+  },
+  {
+    "id": "CRIT-HITL-04",
+    "pillar": "HITL_RESILIENCE",
+    "name": "Tamper-Evident Cryptographic Audit Ledger",
+    "frameworkMappings": {
+      "nistAiRmf": "GOVERN 1.4, MEASURE 2.7",
+      "owaspLlm": "LLM02: Auditability",
+      "iso42001": "A.7.3 (Event Logging)",
+      "cisaZeroTrust": "Continuous Visibility & Audit"
+    },
+    "description": "All tool calls, risk scoring breakdowns, PEP enforcement decisions, and human approvals must be logged into an append-only, SHA-256 hash-chained audit trail.",
+    "metricType": "BOOLEAN",
+    "targetThreshold": "100% execution events hash-chained",
+    "currentValue": 100,
+    "passed": true,
+    "criticality": "HIGH",
+    "remediationGuide": "Enable hash-chained event streaming to enterprise SIEM/Splunk."
+  }
+]

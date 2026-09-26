@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  opa-pdp:
+    image: openpolicyagent/opa:latest-envoy
+    ports:
+      - "8181:8181"
+    command:
+      - "run"
+      - "--server"
+      - "--log-level=info"
+      - "/policies"
+    volumes:
+      - ./policies:/policies:ro
+
+  aegiszero-pep-proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile.pep
+    ports:
+      - "9000:9000"
+    environment:
+      - OPA_URL=http://opa-pdp:8181/v1/data/aegiszero/authz
+      - SPIRE_AGENT_SOCKET=/tmp/spire-agent/public/api.sock
+    depends_on:
+      - opa-pdp
+
+  mock-enterprise-services:
+    image: kennethreitz/httpbin
+    ports:
+      - "8080:80"

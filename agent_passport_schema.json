@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AegisZeroAgentPassport",
+  "type": "object",
+  "required": [
+    "agentId",
+    "spiffeId",
+    "modelProvenance",
+    "delegationChain",
+    "keypair",
+    "sessionToken"
+  ],
+  "properties": {
+    "agentId": {
+      "type": "string"
+    },
+    "spiffeId": {
+      "type": "string",
+      "pattern": "^spiffe://.*"
+    },
+    "name": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string"
+    },
+    "modelProvenance": {
+      "type": "object",
+      "required": [
+        "foundationModel",
+        "modelDigest",
+        "promptHash"
+      ],
+      "properties": {
+        "foundationModel": {
+          "type": "string"
+        },
+        "modelDigest": {
+          "type": "string"
+        },
+        "promptHash": {
+          "type": "string"
+        },
+        "systemInstructionFingerprint": {
+          "type": "string"
+        }
+      }
+    },
+    "delegationChain": {
+      "type": "object",
+      "required": [
+        "originator",
+        "delegationSignature",
+        "delegatedAt",
+        "delegatedMaxRiskCeiling"
+      ],
+      "properties": {
+        "originator": {
+          "type": "string"
+        },
+        "supervisorAgentId": {
+          "type": "string"
+        },
+        "delegationSignature": {
+          "type": "string"
+        },
+        "delegatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "delegatedMaxRiskCeiling": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "authorizedScope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "keypair": {
+      "type": "object",
+      "required": [
+        "algorithm",
+        "publicKeyFingerprint"
+      ],
+      "properties": {
+        "algorithm": {
+          "type": "string",
+          "enum": [
+            "Ed25519",
+            "ECDSA_P256"
+          ]
+        },
+        "publicKeyFingerprint": {
+          "type": "string"
+        }
+      }
+    },
+    "sessionToken": {
+      "type": "object",
+      "required": [
+        "tokenId",
+        "issuedAt",
+        "expiresAt",
+        "nonce",
+        "ttlSeconds"
+      ],
+      "properties": {
+        "tokenId": {
+          "type": "string"
+        },
+        "issuedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "nonce": {
+          "type": "string"
+        },
+        "ttlSeconds": {
+          "type": "number",
+          "maximum": 1800
+        }
+      }
+    }
+  }
+}

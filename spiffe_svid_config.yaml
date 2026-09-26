@@ -1,0 +1,13 @@
+apiVersion: spire.spiffe.io/v1alpha1
+kind: ClusterSPIFFEID
+metadata:
+  name: enterprise-autonomous-agent-svid
+spec:
+  spiffeIDTemplate: "spiffe://enterprise.corp/agent/{{ .PodMeta.Namespace }}/{{ .PodMeta.ServiceAccount }}"
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: autonomous-agent
+      aegiszero.security/mode: zero-trust
+  ttl: 1800s
+  dnsNames:
+    - "{{ .PodMeta.ServiceAccount }}.{{ .PodMeta.Namespace }}.svc.cluster.local"
